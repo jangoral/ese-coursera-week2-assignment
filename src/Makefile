@@ -60,8 +60,17 @@ OBJS = $(SOURCES:.c=.o)
 test:
 	echo $(PLATFORM) $(CC) $(SOURCES) $(OBJS)
 
+%.i : %.c
+	$(CC) -E $< $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@
+
+%.asm : %.c
+	$(CC) -S $< $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@
+
 %.o : %.c
 	$(CC) -c $< $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@
+
+.PHONY:compile-all
+compile-all: $(OBJS)
 
 .PHONY:build
 build: $(TARGET).out
@@ -71,4 +80,4 @@ $(TARGET).out: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f *.o *.i *.d $(TARGET).out $(TARGET).map
+	rm -f *.o *.i *.asm *.d $(TARGET).out $(TARGET).map
